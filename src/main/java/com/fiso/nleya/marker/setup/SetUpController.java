@@ -1,13 +1,18 @@
 package com.fiso.nleya.marker.setup;
 
 
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 
@@ -19,13 +24,15 @@ public class SetUpController {
 
     private final SetUpService setUpService;
 
-    @PostMapping("marking-scheme")
-    public MarkingScheme loadMarkingScheme(
-            @RequestParam(required = true, defaultValue = "zimsec-history-2019-ms.st")
-            @Parameter(example = "zimsec-history-2019-ms.st") String fileName
+
+
+    @PostMapping(value= "marking-scheme",  consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    public ResponseEntity<MarkingScheme> loadMarkingScheme(
+            @Parameter(description = "Files supported include : {.st }")
+            @RequestPart MultipartFile file
     ) {
 
-        return setUpService.loadMarkingScheme(fileName);
+        return ResponseEntity.ok(setUpService.loadMarkingScheme(file));
     }
 
 

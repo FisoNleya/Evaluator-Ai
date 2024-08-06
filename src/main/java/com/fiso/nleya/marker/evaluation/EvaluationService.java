@@ -1,7 +1,10 @@
 package com.fiso.nleya.marker.evaluation;
 
 import com.fiso.nleya.marker.evaluation.results.Results;
+import com.fiso.nleya.marker.setup.MarkingScheme;
+import com.fiso.nleya.marker.setup.MarkingSchemeService;
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.converter.BeanOutputConverter;
 import org.springframework.ai.document.Document;
@@ -18,35 +21,28 @@ import java.util.List;
 public class EvaluationService {
 
     private final ChatClient aiClient;
-
     private final VectorStore vectorStore;
+    private final MarkingSchemeService markingSchemeService;
 
     @Value("classpath:/rag-prompt-template.st")
     private Resource ragPromptTemplate;
 
 
     public EvaluationService(ChatClient.Builder chatClientBuilder,
-                             VectorStore vectorStore) {
+                             VectorStore vectorStore,
+                             MarkingSchemeService markingSchemeService
+    ) {
         this.aiClient = chatClientBuilder.build();
         this.vectorStore = vectorStore;
+        this.markingSchemeService = markingSchemeService;
 
     }
 
 
+    Results evaluate(Answers questionAnswers, String msId){
 
-    Results evaluate(Answers questionAnswers){
-
-        StringBuilder inputString =  new StringBuilder();
-
-        questionAnswers.answers().forEach(answer -> {
-            String val = String.format(" Question: %d%n Answer: %s", answer.question(), answer.answer());
-            inputString.append(val);
-
-        });
-
-        String input = inputString.toString();
-        log.info("INPUT: {}", input);
-
+        MarkingScheme ms = markingSchemeService.findById(msId);
+        String input = getQueryString(questionAnswers, ms);
 
         List<Document> similarDocuments = vectorStore
                 .similaritySearch(SearchRequest.query(input)
@@ -66,12 +62,28 @@ public class EvaluationService {
                         .text(ragPromptTemplate)
                         .param("input", input)
                         .param("format", format)
-                        .param("documents", String.join("\n", contentList)))
+                        .param("documents", String.join(System.lineSeparator(), contentList)))
                 .call()
                 .content();
 
         return outputParser.convert(answer);
 
+    }
+
+    private static @NotNull String getQueryString(Answers questionAnswers, MarkingScheme ms) {
+
+        StringBuilder inputString =  new StringBuilder();
+        inputString.append(String.format("%s : %s", ms.getFileName(), ms.getId()))
+                .append(System.lineSeparator());
+
+        questionAnswers.answers().forEach(answer -> {
+            String val = String.format(" Question: %d%n Student's Answer: %s", answer.question(), answer.answer());
+            inputString.append(val).append(System.lineSeparator());
+        });
+
+        String input = inputString.toString();
+        log.info("INPUT: {}", input);
+        return input;
     }
 
 }

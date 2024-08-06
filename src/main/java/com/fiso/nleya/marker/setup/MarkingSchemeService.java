@@ -25,4 +25,10 @@ public class MarkingSchemeService {
     }
 
 
+    public MarkingScheme findById(String  msId) {
+        return markingSchemeRepository.findById(msId)
+                .orElseThrow(()-> new RuntimeException("MarkingScheme not found with id: " + msId));
+    }
+
+
 }

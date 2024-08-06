@@ -19,13 +19,15 @@ import java.time.LocalDateTime;
 public class MarkingScheme {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ms_id")
-    private long id;
+    private String id;
 
     private String fileName;
 
+    private String storageObjectName;
+
     private String createdBy;
+
 
     @CreationTimestamp
     private LocalDateTime creationDate;

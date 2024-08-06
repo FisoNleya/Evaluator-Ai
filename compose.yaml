@@ -14,3 +14,14 @@ services:
       - './pgvector-data:/var/lib/postgresql/data'  # Persist data to host directory
 
 
+  minio1:
+    image: quay.io/minio/minio
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - ./minio/data:/data
+    environment:
+      MINIO_ROOT_USER: walker
+      MINIO_ROOT_PASSWORD: C4sh@r1ng
+    command: server /data --console-address ":9001"
