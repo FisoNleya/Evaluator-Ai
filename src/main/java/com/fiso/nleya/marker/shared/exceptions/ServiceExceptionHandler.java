@@ -89,6 +89,18 @@ public class ServiceExceptionHandler extends ResponseEntityExceptionHandler {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(customError);
     }
 
+    @ExceptionHandler(TokenAuthenticationException.class)
+    public ResponseEntity<Object> tokenAuthenticationExceptionHandler(TokenAuthenticationException ex) {
+        ErrorMessage customError = ErrorMessage.builder()
+                .eventTime(ZonedDateTime.now())
+                .errorDescription(ex.getLocalizedMessage())
+                .errorCode(HttpStatus.UNAUTHORIZED)
+                .build();
+        log.error(customError.toString(), ex);
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(customError);
+    }
+
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Object> generalExceptionHandler(Exception ex) {
         ErrorMessage customError = ErrorMessage.builder()
@@ -98,6 +110,28 @@ public class ServiceExceptionHandler extends ResponseEntityExceptionHandler {
                 .build();
         log.error(customError.toString(), ex);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(customError);
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<Object> accessDeniedExceptionHandler(AccessDeniedException ex) {
+        ErrorMessage customError = ErrorMessage.builder()
+                .eventTime(ZonedDateTime.now())
+                .errorDescription(ex.getLocalizedMessage())
+                .errorCode(HttpStatus.FORBIDDEN)
+                .build();
+        log.error(customError.toString(), ex);
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(customError);
+    }
+
+    @ExceptionHandler(org.springframework.security.access.AccessDeniedException.class)
+    public ResponseEntity<Object> accessDeniedExceptionHandler(org.springframework.security.access.AccessDeniedException ex) {
+        ErrorMessage customError = ErrorMessage.builder()
+                .eventTime(ZonedDateTime.now())
+                .errorDescription(ex.getLocalizedMessage())
+                .errorCode(HttpStatus.FORBIDDEN)
+                .build();
+        log.error(customError.toString(), ex);
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(customError);
     }
 
 

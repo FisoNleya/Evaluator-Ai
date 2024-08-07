@@ -4,8 +4,8 @@ services:
     image: 'pgvector/pgvector:pg16'
     environment:
       - 'POSTGRES_DB=marker'
-      - 'POSTGRES_PASSWORD=postgres'
-      - 'POSTGRES_USER=postgres'
+      - 'POSTGRES_PASSWORD=${POSTGRES_PASSWORD}'
+      - 'POSTGRES_USER=${POSTGRES_USER}'
     labels:
       - "org.springframework.boot.service-connection=postgres"
     ports:
@@ -22,6 +22,6 @@ services:
     volumes:
       - ./minio/data:/data
     environment:
-      MINIO_ROOT_USER: walker
-      MINIO_ROOT_PASSWORD: C4sh@r1ng
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
     command: server /data --console-address ":9001"

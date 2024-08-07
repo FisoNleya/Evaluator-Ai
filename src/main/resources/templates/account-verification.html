@@ -1,0 +1,187 @@
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Email Verification</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <style>
+    body,
+    html {
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+      background-color: rgb(241, 241, 241);
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 0px auto;
+
+      background-color: #fff;
+    }
+
+    .tag {
+      text-align: center;
+      margin-bottom: 8px;
+    }
+
+    .body {
+      text-align: left;
+      margin-bottom: 2px;
+      margin-top: 10px;
+      padding: 20px;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 10px 20px;
+      background-color: #000;
+      color: #fff;
+      text-decoration: none;
+      font-size: 1.2em;
+      font-weight: 600;
+    }
+
+    .com {
+      font-weight: bold;
+      font-size: 24px;
+    }
+
+    .header {
+      background-color: #020286FF;
+      color: #fff;
+      padding: 4px 12px;
+      margin-bottom: 10px;
+      margin-top: 20px;
+      display: grid;
+      grid-template-columns: 60px auto;
+      align-items: center;
+    }
+
+    .header h4 {
+      font-size: 24px;
+      font-weight: 300;
+    }
+
+    .mb-2 {
+      margin-bottom: 20px !important;
+    }
+
+    .footer {
+      display: flex;
+      align-items: center;
+    }
+
+    .footer .tag {
+      margin: auto;
+      padding: 8px;
+    }
+
+    .links {
+      padding: 4px;
+      max-width: 600px;
+      margin: 0px auto;
+      display: flex;
+      align-items: center;
+      flex-direction: column;
+    }
+
+    .d-flex {
+      align-items: center;
+      justify-content: center;
+    }
+
+    .shop {
+      margin-left: 4px;
+      margin-right: 4px;
+      text-decoration: underline;
+      color: gray;
+    }
+
+    .otp-code {
+      background-color: #dcdbdb;
+      padding: 8px;
+      max-width: 80px;
+      display: flex;
+      border-radius: 8px;
+    }
+
+    .code {
+      font-size: 1.2em;
+      font-weight: bold;
+      text-align: center;
+      margin: auto;
+    }
+
+
+    .footer {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .footer .icons {
+      display: flex;
+      margin-top: 8px;
+
+    }
+
+    .footer .icons i {
+      margin-left: 4px;
+      margin-right: 4px;
+      font-size: 20px;
+
+    }
+
+    .footer .tag {
+      color: gray;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="container">
+    <div class="header">
+<!--      <img src="https://Evaluator AI.manicasolutions.dev/images/Evaluator AI_white.png" width="50px" />-->
+      <h4>Evaluator AI</h4>
+    </div>
+    <div class="tag">
+      <h1>Account Verification</h1>
+    </div>
+    <div class="body">
+      <p>Dear <span th:text="${firstName}"></span>,</p>
+      <p class="mb-2">Thank you for signing up to use Evaluator AI.</p>
+      <p class="mb-2">You're almost ready to get started. To
+        ensure the security of your account, we
+        require verification through a one-time
+        password (OTP). Please use the following OTP
+        to complete the verification process:</p>
+      <div class="otp-code">
+        <span class="code"><span th:text="${code}"></span></span>
+      </div>
+      <p class="mb-2">This code is valid for the next 2
+        hours only.</p>
+      <p class="mb-2">If you did not request this, please ignore this email.</p>
+      <p class="">Regards,<br /><span class="com">Evaluator AI</span></p>
+    </div>
+  </div>
+  <div class="container footer mb-2">
+    <div class="icons">
+      <i class="fab fa-facebook"></i>
+      <i class="fab fa-x-twitter"></i>
+      <i class="fab fa-instagram"></i>
+    </div>
+    <span class="tag"> &copy; Evaluator AI Pvt Ltd <span th:text="${year}"></span>.</span>
+  </div>
+<!--  <div class="links">-->
+<!--    <div class="d-flex">-->
+<!--      <a href="https://Evaluator AI.manicasolutions.com/home" target="_blank"><span class="shop">Home</span></a>-->
+<!--      <a href="https://Evaluator AI.manicasolutions.com/shop" target="_blank"><span class="shop">Shop</span></a>-->
+<!--      <a href="https://Evaluator AI.manicasolutions.com/home" target="_blank"><span class="shop">Contact us</span></a>-->
+<!--    </div>-->
+<!--  </div>-->
+
+</body>
+
+</html>
