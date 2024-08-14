@@ -16,13 +16,15 @@ public class EvaluationController {
 
     private final EvaluationService evaluationService;
 
-    @PostMapping("ms/{msId}")
+    @PostMapping("/assessment/{code}/email/{email}")
     public ResponseEntity<Results> evaluate(
-            @PathVariable(name = "msId")
-            @Parameter(example = "MS00001", description = "The question paper/ marking scheme Id") String msId,
+            @PathVariable(name = "code")
+            @Parameter(example = "ASS00001", description = "The Assessment code ") String code,
+            @PathVariable(name = "email")
+            @Parameter(example = "walker@gmail.com") String email,
             @RequestBody @Valid Answers request
     ) {
-        return new ResponseEntity<>(evaluationService.evaluate(request, msId), HttpStatus.OK);
+        return new ResponseEntity<>(evaluationService.evaluate(request, email, code), HttpStatus.OK);
     }
 
 }

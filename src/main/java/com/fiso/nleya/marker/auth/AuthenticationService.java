@@ -16,8 +16,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationEventPublisher;
-
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -179,7 +177,7 @@ public class AuthenticationService {
 
 
 
-    public static String generateOTP() {
+     static String generateOTP() {
         String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
         StringBuilder otp = new StringBuilder();
         Set<Character> generatedCharacters = new HashSet<>();
@@ -203,7 +201,7 @@ public class AuthenticationService {
     }
 
 
-    public void requestReset(String emailAddress) {
+     void requestReset(String emailAddress) {
         User user = userRepository.findByEmail(emailAddress).orElseThrow(
                 ()->new DataNotFoundException("User with email "+emailAddress+" was not found"));
         generateOtpAndSend(user);
@@ -211,7 +209,7 @@ public class AuthenticationService {
     }
 
 
-    public void resetPassword(ResetPasswordRequest resetPasswordRequest) {
+     void resetPassword(ResetPasswordRequest resetPasswordRequest) {
         User user  = userRepository.findByEmail(resetPasswordRequest.emailAddress())
                 .orElseThrow(()->new DataNotFoundException("User with email "+resetPasswordRequest.emailAddress()+" was not found"));
 

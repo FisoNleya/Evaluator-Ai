@@ -9,9 +9,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.util.Optional;
 
-public class ApplicationAuditAware implements AuditorAware<Integer> {
+public class ApplicationAuditAware implements AuditorAware<String> {
     @Override
-    public Optional<Integer> getCurrentAuditor() {
+    public Optional<String> getCurrentAuditor() {
         Authentication authentication =
                 SecurityContextHolder
                         .getContext()
@@ -24,6 +24,6 @@ public class ApplicationAuditAware implements AuditorAware<Integer> {
         }
 
         User userPrincipal = (User) authentication.getPrincipal();
-        return Optional.ofNullable(userPrincipal.getUserId());
+        return Optional.ofNullable(userPrincipal.getEmail());
     }
 }

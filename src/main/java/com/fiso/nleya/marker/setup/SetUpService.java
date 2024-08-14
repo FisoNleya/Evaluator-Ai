@@ -1,16 +1,17 @@
 package com.fiso.nleya.marker.setup;
 
 
+import com.fiso.nleya.marker.auth.user.User;
+import com.fiso.nleya.marker.setup.ms.MarkingScheme;
+import com.fiso.nleya.marker.setup.ms.MarkingSchemeService;
 import com.fiso.nleya.marker.shared.exceptions.InvalidRequestException;
 import com.fiso.nleya.marker.storage.ObjectStorageService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.bouncycastle.asn1.bc.ObjectStore;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.ai.document.Document;
 import org.springframework.ai.transformer.splitter.TokenTextSplitter;
 import org.springframework.ai.vectorstore.VectorStore;
-import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -19,7 +20,6 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -28,14 +28,14 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class SetUpService {
 
-    private final ResourceLoader resourceLoader;
+
     private final TokenTextSplitter tokenTextSplitter;
     private final VectorStore vectorStore;
     private final MarkingSchemeService markingSchemeService;
     private final ObjectStorageService objectStorageService;
 
 
-    MarkingScheme loadMarkingScheme(MultipartFile file) {
+    MarkingScheme loadMarkingScheme(MultipartFile file, String username) {
 
         String fileName = file.getName();
 
@@ -56,7 +56,7 @@ public class SetUpService {
         vectorStore.accept(splits);
 
 
-        String objectName = objectStorageService.uploadFile(file, "walker");
+        String objectName = objectStorageService.uploadFile(file, username);
 
 
         //Set ms such that its not saved again and again
@@ -64,12 +64,14 @@ public class SetUpService {
                 .id(msId)
                 .fileName(fileName)
                 .storageObjectName(objectName)
-                .createdBy("walker@gmail.com")
                 .build());
     }
 
 
-    private static @NotNull String readFile(MultipartFile file) {
+
+
+
+    static @NotNull String readFile(MultipartFile file) {
         String text;
         try {
 
@@ -84,10 +86,9 @@ public class SetUpService {
     }
 
 
-    public String generateMsId() {
-        return UUID.randomUUID().toString();
+    String generateMsId() {
+        return "MS-"+UUID.randomUUID().toString();
     }
-
 
 
 }

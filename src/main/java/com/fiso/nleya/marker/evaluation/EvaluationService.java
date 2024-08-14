@@ -1,8 +1,10 @@
 package com.fiso.nleya.marker.evaluation;
 
 import com.fiso.nleya.marker.evaluation.results.Results;
-import com.fiso.nleya.marker.setup.MarkingScheme;
-import com.fiso.nleya.marker.setup.MarkingSchemeService;
+import com.fiso.nleya.marker.setup.assessment.Assessment;
+import com.fiso.nleya.marker.setup.assessment.AssessmentService;
+import com.fiso.nleya.marker.setup.ms.MarkingScheme;
+import com.fiso.nleya.marker.setup.ms.MarkingSchemeService;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.ai.chat.client.ChatClient;
@@ -23,6 +25,7 @@ public class EvaluationService {
     private final ChatClient aiClient;
     private final VectorStore vectorStore;
     private final MarkingSchemeService markingSchemeService;
+    private final AssessmentService assessmentService;
 
     @Value("classpath:/rag-prompt-template.st")
     private Resource ragPromptTemplate;
@@ -30,18 +33,25 @@ public class EvaluationService {
 
     public EvaluationService(ChatClient.Builder chatClientBuilder,
                              VectorStore vectorStore,
-                             MarkingSchemeService markingSchemeService
+                             MarkingSchemeService markingSchemeService,
+                             AssessmentService assessmentService
+
     ) {
         this.aiClient = chatClientBuilder.build();
         this.vectorStore = vectorStore;
         this.markingSchemeService = markingSchemeService;
+        this.assessmentService = assessmentService;
 
     }
 
 
-    Results evaluate(Answers questionAnswers, String msId){
+    Results evaluate(Answers questionAnswers, String email, String code){
 
-        MarkingScheme ms = markingSchemeService.findById(msId);
+
+        Assessment assessment = assessmentService.findByAssessesAndCode(email, code);
+
+
+        MarkingScheme ms = assessment.getMarkingScheme();
         String input = getQueryString(questionAnswers, ms);
 
         List<Document> similarDocuments = vectorStore

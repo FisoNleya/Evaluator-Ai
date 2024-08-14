@@ -2,6 +2,8 @@ package com.fiso.nleya.marker.notifications;
 
 
 import com.fiso.nleya.marker.auth.otp.OtpEmailDto;
+import com.fiso.nleya.marker.setup.assessment.AssInvitationDTO;
+import com.fiso.nleya.marker.setup.assessment.Assessee;
 import jakarta.mail.internet.MimeMessage;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.event.EventListener;
@@ -24,6 +26,7 @@ public class UserMailingService extends SendingService {
     private final JavaMailSender mailSender;
 
     private static  final String REGISTRATION = "Evaluator AI Registration";
+    private static  final String INVITATION = "Evaluator AI Assessment Invitation";
 
     public UserMailingService(SpringTemplateEngine springTemplateEngine, JavaMailSender mailSender) {
         super(mailSender);
@@ -59,12 +62,56 @@ public class UserMailingService extends SendingService {
 
     }
 
+    public void prepareAndSendInvitation(AssInvitationDTO invitation, Assessee assessee) {
+
+        MimeMessage message = mailSender.createMimeMessage();
+        try {
+            MimeMessageHelper helper = new MimeMessageHelper(message, true);
+
+            Map<String, Object> map = new HashMap<>();
+            map.put("firstName",assessee.getFirstName());
+            map.put("code",invitation.code());
+            map.put("assessorFullName",invitation.assessorName());
+            map.put("assessmentName",invitation.assessmentName());
+            map.put("assessmentDate",invitation.date());
+            map.put("year", LocalDate.now().getYear());
+            Context context = new Context();
+            context.setVariables(map);
+
+            String htmlString = springTemplateEngine.process("assessment-invitation", context);
+            helper.setSubject(INVITATION);
+            helper.setFrom(username);
+            helper.setTo(assessee.getEmail());
+            helper.setText(htmlString, true);
+
+            sendEmail(assessee.getEmail(),message);
+
+        } catch (Exception e) {
+            throw new IllegalStateException(e);
+        }
+
+    }
+
+
     @Async
     @EventListener
     public void onRegistration(OtpEmailDto otpEmailDto) {
         prepareAndSendOTPEmail(otpEmailDto);
     }
 
+
+
+
+    @Async
+    @EventListener
+    public void onAssessmentCreation(AssInvitationDTO invitationDTO) {
+
+        invitationDTO.assessees()
+                .parallelStream()
+                .unordered()
+                .forEach(assessee -> prepareAndSendInvitation(invitationDTO, assessee));
+
+    }
 
 
 }
