@@ -55,6 +55,8 @@ To run the project locally, follow these steps:
 
 3. Once the application has started, you can access the Swagger documentation at [http://localhost:8080/swagger-ui/index.html](http://localhost:8080/swagger-ui/index.html) to explore the API endpoints and interact with them.
 4. Prepare a .st file to upload and test
+<img width="705" alt="stExample3" src="https://github.com/user-attachments/assets/684586b1-452f-4c73-8e3a-458449cbfd94">
+
 
 
 #### Running the Project in a Container
