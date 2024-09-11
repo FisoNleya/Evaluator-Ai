@@ -8,36 +8,34 @@ import io.swagger.v3.oas.annotations.info.Info;
 import io.swagger.v3.oas.annotations.info.License;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.security.SecurityScheme;
+import io.swagger.v3.oas.annotations.servers.Server;
 
 @OpenAPIDefinition(
         info = @Info(
                 contact = @Contact(
-                        name = "Walkers Service",
-                        email = "contact@walker.com",
-                        url = "https://walker.com"
+                        email = "nleyafiso@gmail.com",
+                        url = "www.linkedin.com/in/fiso-nleya"
                 ),
-                description = "OpenApi documentation for me",
-                title = "Walker - marker",
+                description = "Service via REST API that allows accessors to create assessments, upload marking schemes, assesses take assessment and the platform evaluates using AI tools ",
+                title = "Evaluator AI API ",
                 version = "1.0",
                 license = @License(
-                        name = "Licence name",
-                        url = "https://some-url.com"
+                        name = "dev Fiso",
+                        url = "www.linkedin.com/in/fiso-nleya"
                 ),
                 termsOfService = "Terms of service"
         ),
-        security = {
-                @SecurityRequirement(
-                        name = "bearerAuth"
+        servers = {
+                @Server(
+                        description = "Local ENV",
+                        url = "http://localhost:8080"
+                ),
+                @Server(
+                        description = "PROD ENV",
+                        url = "https://fisonleya/avaluatorai"
                 )
         }
 )
-@SecurityScheme(
-        name = "bearerAuth",
-        description = "JWT auth description",
-        scheme = "bearer",
-        type = SecuritySchemeType.HTTP,
-        bearerFormat = "JWT",
-        in = SecuritySchemeIn.HEADER
-)
 public class OpenApiConfig {
 }
+
